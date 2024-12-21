@@ -1,0 +1,282 @@
+{% extends 'Shop/base.html' %} {% block content %}
+<style>
+  .yorsi {
+    margin-bottom: 100px; /* Ajustez la valeur selon vos besoins */
+  }
+</style>
+<div class="container mt-5">
+  <div class="row">
+    <div class="col-md-8">
+      <div class="card mb-4">
+        <img
+          src="{{ article.image.url }}"
+          class="card-img-top"
+          alt="{{ article.title }}"
+          style="max-width: 100%"
+        />
+        <div class="card-body">
+          <h1 class="card-title">{{ article.title }}</h1>
+          <p class="card-text">{{ article.desc }}</p>
+          <h3 class="text-success">{{ article.price }}$</h3>
+          <div class="d-flex align-items-center">
+            <label for="storage-select" class="mr-2">Choisir le stockage :</label>
+            <select id="storage-select" class="form-control w-25 mr-2">
+              <option value="128">128 Go</option>
+              <option value="250">250 Go</option>
+              <option value="500">500 Go</option>
+              <option value="1000">1 To</option>
+            </select>
+            <input
+              type="number"
+              class="form-control w-25 mr-2"
+              id="quantity-{{ article.id }}"
+              value="1"
+              min="1"
+            />
+            <button
+              class="btn btn-success ajouter-au-panier"
+              data-toggle="tooltip"
+              title="Ajouter"
+              data-article-id="{{ article.id }}"
+              data-article-title="{{ article.title }}"
+              data-article-price="{{ article.price }}"
+              data-article-storage=""  <!-- Ajoutez un attribut pour le stockage -->
+            >
+              <i class="fas fa-cart-plus"></i>
+            </button>
+            <button
+              class="btn btn-danger supprimer-du-panier ml-2"
+              data-toggle="tooltip"
+              title="Supprimer"
+              data-article-id="{{ article.id }}"
+              data-article-title="{{ article.title }}"
+              data-article-price="{{ article.price }}"
+            >
+              <i class="fas fa-trash-alt"></i>
+            </button>
+          </div>
+          <div class="mt-3">
+            <!-- Bouton Partager sur Facebook -->
+            <a href="https://www.facebook.com/sharer/sharer.php?u=https://example.com" target="_blank" class="btn btn-primary">
+                <i class="fab fa-facebook-f"></i> Partager
+            </a>
+            
+            <!-- Bouton Tweeter sur Twitter -->
+            <a href="https://twitter.com/intent/tweet?url=https://example.com" target="_blank" class="btn btn-info">
+                <i class="fab fa-twitter"></i> Tweeter
+            </a>
+            
+            <!-- Bouton Pin sur Pinterest -->
+            <a href="https://pinterest.com/pin/create/button/?url=https://example.com" target="_blank" class="btn btn-danger">
+                <i class="fab fa-pinterest"></i> Pin
+            </a>
+        </div>
+        
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <ul class="nav nav-tabs card-header-tabs" id="myTab" role="tablist">
+            <li class="nav-item">
+              <a
+              class="nav-link active"
+              id="details-tab"
+              data-toggle="tab"
+              href="#details"
+              role="tab"
+              aria-controls="details"
+              aria-selected="true"
+          >
+              Livraison
+              <span class="ml-2 text-muted" style="font-size: 0.9em;">(Après la réservation, le colis est livré après 6h, le temps du traitement)</span>
+          </a>
+            </li>
+            <li class="nav-item">
+              <a
+                class="nav-link"
+                id="reviews-tab"
+                data-toggle="tab"
+                href="#reviews"
+                role="tab"
+                aria-controls="reviews"
+                aria-selected="false"
+                >Avis</a
+              >
+            </li>
+          </ul>
+        </div>
+        <div class="card-body yorsi">
+          <div class="tab-content" id="myTabContent">
+            <div
+              class="tab-pane fade show active"
+              id="details"
+              role="tabpanel"
+              aria-labelledby="details-tab"
+            >
+              <p>{{ article.long_desc }}</p>
+            </div>
+            <div
+              class="tab-pane fade"
+              id="reviews"
+              role="tabpanel"
+              aria-labelledby="reviews-tab"
+            >
+              <h5>Laisser un avis</h5>
+              {% if user.is_authenticated %}
+              <form method="POST" action="{% url 'detail' article.id %}">
+                {% csrf_token %}
+                <div class="form-group">
+                  <textarea class="form-control" name="review_text" rows="3" placeholder="Écrivez votre avis ici..." required></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">Soumettre</button>
+              </form>
+              {% else %}
+              <p>Veuillez <a href="{% url 'connexion' %}">vous connecter</a> ou <a href="{% url 'inscription' %}">vous inscrire</a> pour laisser un avis.</p>
+              {% endif %}
+              
+              <h5 class="mt-3">Avis</h5>
+              <div id="reviews-list">
+                {% for review in article.review_set.all %}
+                  <div class="review">
+                    <img src="{{ review.user.profile_image.url }}" alt="{{ review.user.username }}" style="width: 50px; height: 50px; border-radius: 50%;">
+                    <strong>{{ review.user.username }}</strong>
+                    <p>{{ review.text }}</p>
+                    <small>{{ review.created_at }}</small>
+                  </div>
+                {% empty %}
+                  <p>Aucun avis pour le moment.</p>
+                {% endfor %}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <h3 class="mt-2">Les services similaires</h3>
+      <div class="row">
+        {% for art in relation %} {% if art.id != article.id %}
+        <div class="col-12 mb-3">
+          <div class="card h-100">
+            <img
+              src="{{ art.image.url }}"
+              class="card-img-top"
+              alt="{{ art.title }}"
+              style="height: 180px; object-fit: cover"
+            />
+            <div class="card-body">
+              <h5 class="card-title">{{ art.title }}</h5>
+              <p class="card-text">{{ art.desc|truncatewords:8 }}</p>
+              <a href="{% url 'detail' art.id %}" class="btn btn-primary"
+                >Voir plus</a
+              >
+            </div>
+          </div>
+        </div>
+        {% endif %} {% endfor %}
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %} {% block js %}
+<script type="text/javascript">
+  console.log("Juste pour tester ");
+  if (localStorage.getItem("panier") == null) {
+    var panier = {};
+  } else {
+    panier = JSON.parse(localStorage.getItem("panier"));
+  }
+
+  $(document).on("click", ".ajouter-au-panier", function () {
+    console.log("ajouter");
+    var item_id = $(this).data("article-id").toString();
+    var storage = $("#storage-select").val(); // Récupérer la valeur du stockage sélectionné
+    var quantity = parseInt($("#quantity-" + item_id).val()); // Récupérer la quantité spécifiée
+
+    console.log("Stockage sélectionné : " + storage); // Afficher le stockage sélectionné
+    console.log("Quantité sélectionnée : " + quantity); // Afficher la quantité sélectionnée
+
+    // Vérifiez si la quantité est valide
+    if (quantity > 0) {
+        // Ajoutez le stockage et la quantité aux données de l'article
+        $(this).data("article-storage", storage);
+        $(this).data("article-quantity", quantity); // Ajoutez la quantité
+
+        // Logique pour ajouter l'article au panier
+        // Exemple : panier[item_id] = [quantity, storage, price];
+        if (panier[item_id]) {
+            // Si l'article est déjà dans le panier, mettez à jour la quantité
+            panier[item_id][0] += quantity; // Ajoutez la quantité
+        } else {
+            // Sinon, ajoutez l'article au panier
+            panier[item_id] = [quantity, storage, parseFloat($(this).data("article-price"))];
+        }
+
+        // Mettez à jour le localStorage
+        localStorage.setItem("panier", JSON.stringify(panier));
+        console.log("Article ajouté au panier :", panier);
+    } else {
+        alert("Veuillez entrer une quantité valide.");
+    }
+  });
+
+  function AfficherList(panier) {
+    var panierString = " ";
+    var panierCount = Object.keys(panier).length;
+
+    if (panierCount === 0) {
+      panierString =
+        "<p>Votre panier est vide. Veuillez ajouter un article pour passer à la caisse.</p>";
+    } else {
+      panierString += "<h5>Voici votre liste</h5>";
+      var index = 1;
+      for (var x in panier) {
+        panierString += index + ". ";
+        panierString += panier[x][1] + " Qte: " + panier[x][0] + "<br/>";
+        index += 1;
+      }
+      panierString +=
+        "<a href='/checkout' class='btn btn-primary'>Checkout</a>";
+    }
+
+    $('[data-toggle="popover"]').popover();
+    document
+      .getElementById("panier")
+      .setAttribute("data-content", panierString);
+  }
+  AfficherList(panier);
+
+  $(document).ready(function () {
+    $('[data-toggle="tooltip"]').tooltip();
+  });
+
+  $(document).on("click", ".supprimer-du-panier", function () {
+    var item_id = $(this).data("article-id").toString();
+    if (panier[item_id] != undefined) {
+      if (panier[item_id][0] > 1) {
+        panier[item_id][0] -= 1;
+        panier[item_id][2] -= parseFloat($(this).data("article-price"));
+      } else {
+        delete panier[item_id];
+      }
+      localStorage.setItem("panier", JSON.stringify(panier));
+      document.getElementById("panier").innerHTML =
+        "Panier(" + Object.keys(panier).length + ")";
+      AfficherList(panier);
+    }
+  });
+
+  $(document).on("submit", "#review-form", function (e) {
+    e.preventDefault(); // Empêche le rechargement de la page
+    var reviewText = $("#review-text").val();
+    
+    if (reviewText) {
+      // Ajouter l'avis à la liste
+      $("#reviews-list").append("<p>" + reviewText + "</p>");
+      $("#review-text").val(""); // Réinitialiser le champ de texte
+    }
+  });
+</script>
+{% endblock %}
+
+

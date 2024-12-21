@@ -1,0 +1,189 @@
+{% extends "Shop/base.html" %}
+{% block content %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Paramètres - Herry Shop</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .title {
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 30px;
+            color: #333;
+        }
+
+        h2 {
+            margin-top: 20px;
+            border-bottom: 2px solid #007bff;
+            padding-bottom: 10px;
+            color: #333;
+        }
+
+        label {
+            display: block;
+            margin: 10px 0 5px;
+            color: #555;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="password"],
+        input[type="file"],
+        input[type="checkbox"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        button {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        .profile-image {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .profile-image img {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid #ddd;
+            background-color: #e9ecef;
+            display: inline-block;
+        }
+
+        .profile-image p {
+            font-size: 16px;
+            color: #777;
+        }
+
+        .alert-warning {
+            background-color: #fff3cd;
+            color: #856404;
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+        }
+
+        .alert-warning ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .alert-warning li {
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        {% if messages %}
+            <div class="alert-warning">
+                <ul>
+                    {% for message in messages %}
+                        <li>{{ message }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endif %}
+
+        <h1 class="title">Paramètres du Compte</h1>
+
+        <!-- Formulaire pour l'image de profil -->
+        <form id="profile-image-form" method="post" enctype="multipart/form-data" action="{% url 'change_profile_image' %}">
+            {% csrf_token %}
+            <h2>Image de Profil</h2>
+            <div class="profile-image">
+                {% if user.profile_image %}
+                    <img src="{{ user.profile_image.url }}" alt="Image de Profil">
+                {% else %}
+                    <img src="{% static 'images2/images-3.png' %}" alt="Image de Profil">
+                    <p>Aucune image de profil</p>
+                {% endif %}
+            </div>
+            <label for="profile_image">Changer l'image de profil</label>
+            <input type="file" id="profile_image" name="profile_image" required>
+            <button type="submit">Mettre à Jour</button>
+        </form>
+        <!-- Formulaire pour les préférences de notification -->
+        <form id="account-info" method="post" action="{% url 'update_account_info' %}">
+            {% csrf_token %}
+            <h2>Modifier les Informations du Compte</h2>
+            
+            <label for="old_name">Ancien Nom</label>
+            <input type="text" id="old_name" name="old_name" value="{{ user.username }}" readonly required>
+            
+            <label for="new_name">Nouveau Nom</label>
+            <input type="text" id="new_name" name="new_name" required>
+            
+            <label for="old_email">Ancien Email</label>
+            <input type="email" id="old_email" name="old_email" value="{{ user.email }}" readonly required>
+            
+            <label for="new_email">Nouvel Email</label>
+            <input type="email" id="new_email" name="new_email" required>
+            
+            <button type="submit">Mettre à Jour</button>
+        </form>
+
+        <!-- Form for Notification Preferences -->
+        <form id="notification-preferences" method="#" action="#">
+            {% csrf_token %}
+            <h2>Préférences de Notification</h2>
+            <label for="email_notifications">Notifications par Email</label>
+            <input type="checkbox" id="email_notifications" name="email_notifications" {% if user.email_notifications %}checked{% endif %}>
+            
+            <label for="sms_notifications">Notifications par SMS</label>
+            <input type="checkbox" id="sms_notifications" name="sms_notifications" {% if user.sms_notifications %}checked{% endif %}>
+            
+            <button type="#">Enregistrer les Préférences</button>
+        </form>
+
+        <!-- Formulaire pour changer le mot de passe -->
+        <h2>Changer le Mot de Passe</h2>
+        <form method="POST" action="{% url 'change_password' %}">
+            {% csrf_token %}
+            {{ form.as_p }}  <!-- Affiche le formulaire de changement de mot de passe -->
+            <button type="submit">Here reset your password</button>
+        </form>
+    </div>
+</body>
+</html>
+{% endblock %}

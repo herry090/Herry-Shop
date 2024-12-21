@@ -1,0 +1,252 @@
+{% extends "Shop/base.html" %} 
+{% block content %}
+<style>
+  .btn {
+    margin-bottom: 20px; /* Ajustez la valeur selon vos besoins */
+  }
+</style>
+<div class="container mt-5">
+  <div class="row">
+    <div class="col-md-12">
+      <h3 class="text-center mb-4">Liste réservation en cours</h3>
+      <ul class="list-group" id="item-list"></ul>
+    </div>
+  </div>
+  <div class="row mt-4">
+    <div class="col-md-12">
+      <form method="POST" class="needs-validation" novalidate>
+        {% csrf_token %}
+        <input type="hidden" id="items" name="items" />
+        <div class="form-row">
+          <div class="form-group col-md-6">
+            <label for="nom">Nom</label>
+            <input
+              type="text"
+              id="nom"
+              name="nom"
+              class="form-control"
+              placeholder="Herry"
+              required
+            />
+            <div class="invalid-feedback">
+              Le nom est requis.
+            </div>
+          </div>
+          <div class="form-group col-md-6">
+            <label for="email">Email</label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              class="form-control"
+              placeholder="Herrympoto243@gmail.com"
+              required
+            />
+            <div class="invalid-feedback">
+              L'email est requis.
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="address">Address</label>
+          <input
+            type="text"
+            id="address"
+            name="address"
+            class="form-control"
+            placeholder="Avenue&numero: ,Commune: ,Ref: "
+            required
+          />
+          <div class="invalid-feedback">
+            L'adresse est requise.
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group col-md-6">
+            <label for="ville">Ville</label>
+            <select id="ville" name="ville" class="form-control" required>
+              <option value="" disabled selected>Choisir...</option>
+              <option>Kinshasa</option>
+              <option>Lubumbashi</option>
+              <option>Goma</option>
+              <option>Quebec</option>
+              <option>Paris</option>
+              <option>Yaounde</option>
+              <option>Brazzaville</option>
+            </select>
+            <div class="invalid-feedback">
+              La ville est requise.
+            </div>
+          </div>
+          <div class="form-group col-md-4">
+            <label for="pays">Pays</label>
+            <select id="pays" name="pays" class="form-control" required>
+              <option value="" disabled selected>Choisir...</option>
+              <option>Republique democratique du congo</option>
+              <option>Canada</option>
+              <option>France</option>
+              <option>Cameroun</option>
+              <option>Republique du congo</option>
+            </select>
+            <div class="invalid-feedback">
+              Le pays est requis.
+            </div>
+          </div>
+          <div class="form-group col-md-2">
+            <label for="zipcode">Code postal</label>
+            <input
+              name="zipcode"
+              id="zipcode"
+              type="text"
+              class="form-control"
+              placeholder="75001"
+              required
+            />
+            <div class="invalid-feedback">
+              Le code postal est requis.
+            </div>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group col-md-2">
+            <label for="total">Somme total à payer</label>
+            <input
+              name="total"
+              id="total"
+              type="text"
+              readonly
+              class="bg-dark text-warning form-control"
+            />
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" id="gridCheck" required />
+            <label class="form-check-label" for="gridCheck">
+              Acceptez - les conditions
+            </label>
+            <div class="invalid-feedback">
+              Vous devez accepter les conditions pour confirmer la commande.
+            </div>
+          </div>
+        </div>
+        <button type="submit" class="btn btn-primary btn-block">Commander</button>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %} 
+{% block js %}
+<script type="text/javascript">
+  // Vérifiez que jQuery est chargé
+  if (typeof jQuery === 'undefined') {
+    console.error('jQuery is not loaded');
+  }
+
+  // Initialisation du panier
+  var panier = localStorage.getItem("panier") ? JSON.parse(localStorage.getItem("panier")) : {};
+
+  // Variables pour le total et le nombre d'articles
+  var total = 0;
+  var nombre = 0;
+
+  // Parcourir les articles du panier
+  for (var item in panier) {
+    let name = panier[item][1];
+    let quantite = parseInt(panier[item][0], 10);
+    let prix = parseFloat(panier[item][2]);
+    nombre += quantite;
+    total += prix * quantite;
+
+    // Créer l'élément de la liste
+    let itemString = `<li class="list-group-item d-flex justify-content-between align-items-center">
+     ${name}
+     <span class="badge badge-primary badge-pill">QTE:${quantite}</span>
+     <span class="badge badge-warning badge-pill"> ${prix}$</span>
+    </li>`;
+    $("#item-list").append(itemString);
+  }
+
+  // Ajouter le total des articles
+  let itemNombre = `<li class="list-group-item d-flex justify-content-between align-items-center">
+    <b class="bg-danger ">PRIX ET QUANTITE TOTAL</b>
+    <span class="badge badge-danger badge-pill">TQTE: ${nombre}</span>
+    <span class="badge badge-danger badge-pill"> ${total}$</span>
+   </li>`;
+  $("#item-list").append(itemNombre);
+
+  // Mettre à jour le champ total
+  $("#total").val(total + "$");
+  $("#items").val(JSON.stringify(panier));
+
+   // Ajout d'un écouteur d'événement pour le formulaire de commande
+   document.querySelector("form").addEventListener("submit", function (e) {
+            // Empêcher la soumission du formulaire par défaut
+            e.preventDefault();
+
+            // Vérifier si tous les champs sont remplis
+            var nom = document.getElementById("nom").value.trim();
+            var email = document.getElementById("email").value.trim();
+            var address = document.getElementById("address").value.trim();
+            var ville = document.getElementById("ville").value.trim();
+            var zipcode = document.getElementById("zipcode").value.trim();
+            var conditionsAcceptees = document.getElementById("gridCheck").checked;
+
+            // Créer un message d'erreur
+            var messageErreur = "";
+
+            // Vérifier chaque champ et ajouter un message d'erreur si nécessaire
+            if (!nom) messageErreur += "Le nom est requis.\n";
+            if (!email) messageErreur += "L'email est requis.\n";
+            if (!address) messageErreur += "L'adresse est requise.\n";
+            if (!ville) messageErreur += "La ville est requise.\n";
+            if (!zipcode) messageErreur += "Le code postal est requis.\n";
+            if (!conditionsAcceptees)
+                messageErreur += "Vous devez accepter les conditions pour confirmer la commande.\n";
+
+            // Vérifier si l'email est un compte Gmail
+            var regexGmail = /^[a-zA-Z0-9._-]+@gmail\.com$/;
+            if (!regexGmail.test(email)) {
+                messageErreur += "Veuillez entrer une adresse email Gmail valide.\n";
+            }
+
+            // Si un message d'erreur existe, afficher l'alerte et arrêter la soumission
+            if (messageErreur) {
+                alert(messageErreur);
+                return false;
+            }
+
+            // Si tout est correct, soumettre le formulaire
+            this.submit();
+
+            // Vider le localStorage et le panier après la soumission réussie
+            localStorage.removeItem("panier"); // Nettoie le panier
+            // Si vous avez d'autres éléments à supprimer, utilisez localStorage.clear();
+        });
+
+  // Bootstrap validation
+  (function() {
+    'use strict';
+    window.addEventListener('load', function() {
+      var forms = document.getElementsByClassName('needs-validation');
+      var validation = Array.prototype.filter.call(forms, function(form) {
+        form.addEventListener('submit', function(event) {
+          if (form.checkValidity() === false) {
+            event.preventDefault();
+            event.stopPropagation();
+          }
+          form.classList.add('was-validated');
+        }, false);
+      });
+    }, false);
+  })();
+</script>
+{% endblock %}
+
+
+
+
+
+
+
+

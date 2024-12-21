@@ -1,0 +1,446 @@
+Monographie de Herry Shop
+Introduction
+Bienvenue dans la monographie de Herry Shop, un site e-commerce innovant spécialisé dans la vente d'ordinateurs, de téléphones et d'accessoires. Ce document explore en profondeur les technologies avancées qui alimentent notre plateforme, mettant en lumière les choix techniques, les fonctionnalités sophistiquées, et l'impact positif sur l'expérience utilisateur. Construit avec une architecture moderne et des outils de pointe, Herry Shop offre une expérience d'achat en ligne inégalée.
+
+Technologies Utilisées
+1. Django
+Django, un framework web de haut niveau en Python, a été le pilier fondamental pour le développement de Herry Shop. Ce framework est réputé pour sa robustesse, sa sécurité, et sa facilité de maintenance, ce qui en fait le choix idéal pour construire une plateforme e-commerce performante.
+
+Modèles et Base de Données : Django facilite la définition de modèles complexes pour gérer les données. Le modèle CustomUser est configuré pour inclure des informations étendues sur les utilisateurs, telles que les images de profil. Cette approche assure une gestion efficace et sécurisée des données utilisateur.
+
+Formulaires : Grâce à ModelForm, les formulaires de mise à jour, tels que ceux pour les informations de profil et les paramètres de compte, sont non seulement faciles à créer mais aussi dotés de validations intégrées. Cela garantit que les données entrées sont conformes aux attentes et sécurisées.
+
+Interface d'Administration : Django fournit une interface d'administration intuitive et personnalisable, permettant aux administrateurs de gérer les produits, les utilisateurs, et les commandes de manière centralisée et efficace. Cette fonctionnalité réduit le besoin de développement personnalisé pour la gestion du backend.
+
+Routage URL : Le système de routage de Django permet de configurer des chemins d'URL clairs et logiques, simplifiant la navigation et assurant que chaque utilisateur peut accéder facilement à toutes les sections du site, de la page d'accueil aux paramètres du compte.
+
+2. API Google Maps
+L'intégration de l'API Google Maps enrichit l'expérience utilisateur en offrant des fonctionnalités de géolocalisation avancées. Ce service est indispensable pour améliorer l'interaction des utilisateurs avec le site.
+
+Localisation des Points de Vente : Grâce à l'API Google Maps, les utilisateurs peuvent visualiser sur une carte interactive la localisation des points de vente et des centres de service. Cette fonctionnalité facilite la planification des visites et améliore la satisfaction client en rendant les informations géographiques accessibles.
+
+Géolocalisation Dynamique : L'API permet également de récupérer et d'afficher la position actuelle de l'utilisateur, fournissant ainsi des recommandations locales pertinentes et personnalisées. Cette fonctionnalité aide les utilisateurs à découvrir des produits ou services proches de chez eux.
+
+3. HTML, CSS, et JavaScript
+HTML : Le balisage HTML assure une structure claire et sémantique du contenu du site, facilitant l'accès et la compréhension des informations par les utilisateurs.
+
+CSS : Les styles CSS appliqués au site garantissent une apparence professionnelle et cohérente. Le design responsive assure que le site est accessible et fonctionnel sur tous les types d'appareils, offrant une expérience utilisateur fluide sur mobile comme sur desktop.
+
+JavaScript : Les fonctionnalités interactives, telles que les pop-ups de notifications, la gestion dynamique des formulaires, et les améliorations de l'interface utilisateur, sont rendues possibles grâce à JavaScript. Cela permet de créer une expérience utilisateur engageante et réactive.
+
+Fonctionnalités Clés
+1. Page d'Accueil
+La page d'accueil est conçue pour captiver les visiteurs avec une présentation élégante des produits phares, des offres promotionnelles, et des liens vers les principales catégories. Cette page est optimisée pour encourager les explorations et les achats.
+
+2. Pages de Produits
+Chaque page de produit est soigneusement élaborée pour offrir des informations détaillées, des images haute résolution, et des spécifications complètes. Les utilisateurs peuvent facilement ajouter des produits à leur panier et finaliser leurs achats en ligne.
+
+3. Gestion des Utilisateurs
+La plateforme permet aux utilisateurs de gérer leur profil, y compris la mise à jour de l'image de profil et des préférences de notification, directement depuis la page des paramètres. Cette fonctionnalité est conçue pour offrir une personnalisation maximale et une gestion simplifiée des informations personnelles.
+
+4. Panier d'Achat et Commandes
+Le système de panier d'achat est intégré de manière fluide, permettant aux utilisateurs de suivre et de gérer leurs commandes avec facilité. Les fonctionnalités de paiement en ligne sont sécurisées, garantissant une transaction sans faille.
+
+Importance des Technologies
+1. Django
+Django est au cœur de notre architecture technique, offrant des outils puissants pour la gestion des données, la sécurité, et la maintenance. Son utilisation assure une plateforme stable et évolutive, capable de répondre aux besoins croissants du site.
+
+2. API Google Maps
+L'intégration de l'API Google Maps est essentielle pour offrir une valeur ajoutée aux utilisateurs en fournissant des informations géographiques précises et utiles. Cette fonctionnalité aide à améliorer l'accessibilité des services et renforce la satisfaction des clients en leur offrant des options personnalisées basées sur leur localisation.
+
+Conclusion
+Herry Shop se distingue par son utilisation judicieuse de technologies modernes pour créer une expérience d'achat en ligne exceptionnelle. Avec Django comme fondation robuste et l'API Google Maps ajoutant une couche de personnalisation géographique, le site offre une plateforme à la fois puissante et conviviale. Chaque élément, du design aux fonctionnalités interactives, est conçu pour maximiser l'efficacité et la satisfaction des utilisateurs.
+
+
+
+{% extends "Shop/base.html" %}
+{% block content %}
+{% load static %}
+<head>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Herry-Shop</title>
+    <style>
+        body {
+            font-family: 'Helvetica Neue', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4; /* Couleur de fond */
+        }
+        header {
+            background-image: url('{% static "images/jip.jpg" %}'); /* Utiliser une image de plus grande taille */
+            background-size: cover; /* S'assurer que l'image couvre tout l'en-tête */
+            height: 400px; /* Hauteur ajustée pour l'en-tête */
+            color: black;
+            padding: 60px 20px; /* Espacement interne */
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            font-size: 50%;
+        }
+        h1.title, h2, h4 {
+            color: #fff;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+        }
+        #home {
+            padding: 40px;
+            text-align: center;
+        }
+        .btn-reservation {
+            background-color: #28a745;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            text-decoration: none;
+        }
+        .find_trip input {
+            margin: 5px 0;
+            padding: 10px;
+            width: calc(100% - 22px); /* Ajustement de la largeur */
+        }
+        .content {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around; /* Espacement entre les boxes */
+        }
+        .box {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            margin: 10px;
+            overflow: hidden;
+            width: 280px; /* Largeur ajustée pour les boxes */
+            transition: transform 0.3s; /* Effet de transition */
+            text-align: left; /* Alignement à gauche pour le texte */
+        }
+        .box:hover {
+            transform: scale(1.05); /* Effet de zoom au survol */
+        }
+        .box img {
+            width: 100%; /* Image responsive */
+            height: 180px; /* Hauteur fixe pour les images */
+            object-fit: cover; /* Ajustement de l'image */
+        }
+        #a-propos {
+            display: flex; /* Flexbox pour aligner la vidéo et le texte */
+            align-items: center; /* Centrer verticalement */
+            padding: 40px; /* Espacement interne */
+        }
+        #a-propos .left, #a-propos .right {
+            flex: 1; /* Prendre une part égale de l'espace */
+            margin: 10px; /* Espacement entre les colonnes */
+        }
+        #contact {
+            background-color: #007BFF; /* Couleur de fond pour la section contact */
+            padding: 10px; /* Réduction de l'espacement interne */
+            color: white;
+            margin-bottom: 20px; /* Espacement avec le footer */
+        }
+        #contact input, #contact textarea {
+            width: calc(100% - 22px);
+            margin: 5px 0;
+            padding: 10px;
+        }
+
+        .jiu{
+            color: black;
+        }
+        button {
+            background-color: #28a745; /* Couleur du bouton d'envoi */
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .btn-lire-plus {
+        background-color: #28a745; /* Couleur du bouton */
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        text-decoration: none; /* Enlever le soulignement */
+        }
+
+        #contact {
+        margin-top: 20px;
+    }
+    .left-right {
+        display: flex;
+        justify-content: space-between;
+    }
+    .left,
+    .right {
+        flex: 1;
+    }
+    .right {
+        margin-left: 20px; /* Espacement entre les colonnes */
+    }
+    form {
+        display: flex;
+        flex-wrap: wrap;
+    }
+    label,
+    input,
+    textarea {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+    iframe {
+        width: 100%;
+        height: 150px;
+        border: 0;
+    }
+    .auto-typing{
+        color: #007BFF;
+    }
+</style>
+
+    </style>
+</head>
+<body>
+    <header>
+        <h1 class="title">Bienvenue |<span class='auto-typing'></span></h1>
+        <h3 class="title">Votre avenir numerique commence ici.</h3>
+        <h6 class="title">Naviguez, cliquez, acheter : Votre boutique high-tech, vous acompagne ...</h6>
+    </header>
+    <!-- A propos section -->
+    <section id="a-propos">
+        <div class="left">
+            <video src="{% static 'images2/vics.mp4'%}" autoplay loop muted style="width: 100%; height: auto;"></video> <!-- Ajout de muted pour la vidéo -->
+        </div>
+        <div class="right">
+            <h1 class="title">À propos de Herry-shop</h1>
+            <h6>Bienvenue chez Herry-shop, votre destination en ligne pour tous vos besoins en matière d’ordinateurs, d’appareils électroniques et d’accessoires. Notre mission est de vous fournir des produits de haute qualité, des prix compétitifs et un service client exceptionnel.</h6>
+            <h2 class="title">Notre histoire</h2>
+            <h6>Emplenté en fin novembre 2012 portant acquisition, confiance et statut du meilleur magasin tech online, Herry-shop est née de la passion pour la technologie et le désir de simplifier l’achat en ligne. Notre équipe dévouée travaille dur pour sélectionner les meilleurs produits et vous offrir une expérience de magasinage sans tracas.</h6>
+        </div>
+    </section>
+    <section id="a-propos">
+        <div class="left">
+            <video src="{% static 'images2/bings.mp4' %}" autoplay loop muted style="width: 100%; height: auto;"></video> <!-- Ajout de muted pour la vidéo -->
+        </div>
+        <div class="right">
+            <h1 class="title">Notre gamme de produits</h1>
+            <h6>Ordinateurs : Découvrez notre vaste sélection d’ordinateurs portables, de PC de bureau et d’accessoires. Que vous soyez un professionnel, un étudiant ou un amateur de jeux, nous avons ce qu’il vous faut.
+                Appareils électroniques : Des smartphones aux tablettes, en passant par les montres connectées et les écouteurs, explorez nos dernières innovations technologiques.
+                Accessoires : Protégez et améliorez vos appareils avec nos étuis, chargeurs, claviers, souris et bien plus encore.</h6>
+            <h2 class="title">Pourquoi choisir Herry-shop ?</h2>
+            <h6>Qualité garantie : Nous ne proposons que des produits de marques réputées, testés et approuvés.
+                Livraison rapide : Recevez vos achats directement à votre porte, rapidement et en toute sécurité.
+                Service clientèle exceptionnel : Notre équipe est là pour répondre à vos questions et résoudre tout problème.</h6>
+            <a href="{% url 'acceuil' %}" class="btn-lire-plus">Voir la boutique</a><!-- Transformé en bouton -->
+        </div>
+    </section>
+
+    <!-- Section témoignages -->
+    <section id="temoignages" style="margin: 40px 0; text-align: center;">
+        <h1 class="title" style="font-size: 2.5em; margin-bottom: 20px;"> Ce que les clients disent de nous </h1>
+        <div class="content" style="display: flex; justify-content: center; gap: 20px; flex-wrap: wrap;">
+            <div class="temoignage" style="flex: 1; max-width: 300px; padding: 20px; border: 1px solid #ddd; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); background-color: #f9f9f9;">
+                <img src="{% static 'images/R.jpeg' %}" alt="Logo 1" style="width: 100px; height: auto; margin-bottom: 10px;">
+                <p style="font-size: 1.2em; font-style: italic; color: #555;">"Un service exceptionnel! Je recommande vivement Herry-Shop a tous mes warriors."</p>
+                <p style="font-weight: bold; color: #333;">- Fally Ipupa | client satisfait </p>
+            </div>
+            <div class="temoignage" style="flex: 1; max-width: 300px; padding: 20px; border: 1px solid #ddd; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); background-color: #f9f9f9;">
+                <img src="{% static 'images/dena1.jpeg' %}" alt="Logo 2" style="width: 100px; height: auto; margin-bottom: 10px;">
+                <p style="font-size: 1.2em; font-style: italic; color: #555;">"Une expérience rassurante et produits de haute qualités, merci Herry-Shop!"</p>
+                <p style="font-weight: bold; color: #333;">- Dena Muana | cliente fidele </p>
+            </div>
+            <div class="temoignage" style="flex: 1; max-width: 300px; padding: 20px; border: 1px solid #ddd; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); background-color: #f9f9f9;">
+                <img src="{% static 'images/mbi1.jpeg' %}" alt="Logo 3" style="width: 100px; height: auto; margin-bottom: 10px;">
+                <p style="font-size: 1.2em; font-style: italic; color: #555;">"J'ai été livrer dans un temps reccords, Un service client impecable !"</p>
+                <p style="font-weight: bold; color: #333;">- Moise mbiye | client satisfait</p>
+            </div>
+        </div>
+    </section>
+    
+
+    <!-- section destination -->
+    <section id="popular-destination">
+        <h1 class="title">Nos produits phares</h1>
+        <div class="content">
+            <!-- box -->
+            <div class="box">
+                <img src="{% static 'images/IMG_1770.jpg' %}" alt="Macbook Pro" class="product-img">
+                <div class="box-content">
+                    <h4 class="product-title">Macbook Pro</h4>
+                    <p class="product-description">Des ordinateurs Macbook en gros et détails.</p>
+                    <p class="product-description">Pour les entreprises et services quotidiens.</p>
+                    <p class="product-description">Pour plus de détails, consultez notre boutique.</p>
+                    <a href="{% url 'acceuil' %}" class="btn-lire-plus">Voir plus</a>
+                </div>
+            </div>
+            <!-- box -->
+            <div class="box">
+                <img src="{% static 'images/IMG_1740.jpg' %}" alt="Macbook Pro i7 2018" class="product-img">
+                <div class="box-content">
+                    <h4 class="product-title">Macbook Pro i7 2018</h4>
+                    <p class="product-description">Disque SSD 256 Go</p>
+                    <p class="product-description">Processeur 2.20 GHz</p>
+                    <p class="product-description">Clavier lumineux</p>
+                    <a href="{% url 'acceuil' %}" class="btn-lire-plus">Voir plus</a>
+                </div>
+            </div>
+            <!-- box -->
+            <div class="box">
+                <img src="{% static 'images/IMG_1781.PNG' %}" alt="HP Gaming X" class="product-img">
+                <div class="box-content">
+                    <h4 class="product-title">HP Gaming X</h4>
+                    <p class="product-description">Performances supérieures à celles des ordinateurs standard</p>
+                    <p class="product-description">Processeur ultra puissant, carte graphique de haute qualité pour les gamers</p>
+                    <a href="{% url 'acceuil' %}" class="btn-lire-plus">Voir plus</a>
+                </div>
+            </div>
+            <!-- box -->
+            <div class="box">
+                <img src="{% static 'images/IMG_1778.PNG' %}" alt="Phantom Windo" class="product-img">
+                <div class="box-content">
+                    <h4 class="product-title">Phantom Windo</h4>
+                    <p class="product-description">Disque SSD 1 To, i7-1360P</p>
+                    <p class="product-description">Écran Retina 15 pouces</p>
+                    <p class="product-description">13e génération, 15.6 pouces</p>
+                    <a href="{% url 'acceuil' %}" class="btn-lire-plus">Voir plus</a>
+                </div>
+            </div>
+            <!-- box -->
+            <div class="box">
+                <img src="{% static 'images/mac2.jpg' %}" alt="Macbook Pro i7 2017" class="product-img">
+                <div class="box-content">
+                    <h4 class="product-title">Macbook Pro i7 2017</h4>
+                    <p class="product-description">Écran Retina 15 pouces</p>
+                    <p class="product-description">Disque SSD 256 Go</p>
+                    <p class="product-description">RAM 16 Go</p>
+                    <a href="{% url 'acceuil' %}" class="btn-lire-plus">Voir plus</a>
+                </div>
+            </div>
+            <!-- box -->
+            <div class="box">
+                <img src="{% static 'images/IMG_1738.jpg' %}" alt="HP Elitebook i5 8th Gen" class="product-img">
+                <div class="box-content">
+                    <h4 class="product-title">HP Elitebook i5 8th Gen</h4>
+                    <p class="product-description">Disque SSD 256 Go</p>
+                    <p class="product-description">Processeurs logiques 1.60, 1.80 GHz</p>
+                    <p class="product-description">Ports type C, carte SIM, HDMI et autres</p>
+                    <a href="{% url 'acceuil' %}" class="btn-lire-plus">Voir plus</a>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+
+<!-- Localisation section -->
+<section id="localisation">
+    <h1 class="title">Trouvez votre localisation</h1>
+    <form id="location-form" method="post" action="{% url 'location' %}">
+        {% csrf_token %}
+        <div class="left-right">
+            <div class="left">
+                <label for="country">Pays</label>
+                <input type="text" id="country" name="country" required>
+                
+                <label for="city">Ville</label>
+                <input type="text" id="city" name="city" required>
+                
+                <label for="region">Région</label>
+                <textarea id="region" name="region" cols="30" rows="2"></textarea>
+            </div>
+            <div class="right">
+                <div id="map"></div>
+            </div>
+        </div>
+        <button type="submit">Envoyer</button>
+    </form>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialisation de la carte
+            var map = L.map('map').setView([48.8588443, 2.2943506], 13); // Coordonnées de Paris
+
+            // Ajout de la couche de tuiles OpenStreetMap
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                maxZoom: 19,
+                attribution: '© OpenStreetMap'
+            }).addTo(map);
+
+            // Gestion du formulaire
+            $('#location-form').on('submit', function(e) {
+                e.preventDefault();
+
+                var formData = $(this).serialize();
+
+                $.ajax({
+                    url: $(this).attr('action'),
+                    type: 'POST',
+                    data: formData,
+                    success: function(response) {
+                        if (response.lat && response.lon) {
+                            map.setView([response.lat, response.lon], 13); // Met à jour la vue de la carte
+                            L.marker([response.lat, response.lon]).addTo(map); // Ajoute un marqueur
+                        } else {
+                            alert('Localisation introuvable');
+                        }
+                    },
+                    error: function() {
+                        alert('Erreur lors de la récupération des données de localisation');
+                    }
+                });
+            });
+        });
+    </script>
+</section>
+
+
+    <script>
+        var toggle_menu = document.querySelector('.responsive-menu');
+        var menu = document.querySelector('.menu');
+        toggle_menu.onclick= function(){
+             toggle_menu.classList.toggle('active');
+             menu.classList.toggle('responsive')
+        }
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12"></script>
+    <script>
+        let typed = new Typed('.auto-typing', {
+            strings: ['chez Herry-Shop !', 'Boyeyi malamu !', 'Kwiza mbote !', 'Are you ready?', 'Here we go !'],
+            typeSpeed: 100,
+            backSpeed: 100,
+            loop: true,
+            fadeOut: true,
+            fadeOutClass: 'typed-fade-out',
+            fadeOutDelay: 500
+
+        })
+    </script>
+    <script src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@0.2.28/bundled/lenis.js"></script>
+    <script>
+    const lenis = new Lenis({
+      duration: 1.2,
+      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), // https://www.desmos.com/calculator/brs54l4xou
+      direction: 'vertical', // vertical, horizontal
+      gestureDirection: 'vertical', // vertical, horizontal, both
+      smooth: true,
+      mouseMultiplier: 1,
+      smoothTouch: false,
+      touchMultiplier: 2,
+      infinite: false,
+    })
+    //get scroll value
+    lenis.on('scroll', ({ scroll, limit, velocity, direction, progress }) => {
+      console.log({ scroll, limit, velocity, direction, progress })
+    })
+    function raf(time) {
+      lenis.raf(time)
+      requestAnimationFrame(raf)
+    }
+    requestAnimationFrame(raf)
+    </script>
+</body>
+{% endblock %}
+
+
+

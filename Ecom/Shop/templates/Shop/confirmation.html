@@ -1,0 +1,28 @@
+{% extends "Shop/base.html" %}
+{% block content %}
+<style>
+    .yorsi {
+      margin-bottom: 50px; /* Ajustez la valeur selon vos besoins */
+    }
+  </style>
+<div class="container mt-5 yorsi">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card mt-5">
+                <div class="card-header bg-success text-center">
+                    <h3 class="text-white">Confirmation de commande</h3>
+                </div>
+                <div class="card-body text-center">
+                    <i class="fas fa-check-circle fa-3x text-success mb-3"></i>
+                    <h4 class="text-dark">Merci, {{ name }} !</h4>
+                    <p class="text-muted">Votre commande a été reçue avec succès.</p>
+                    <p class="text-muted">Vous serez livré dans un délai de 1 jour.</p>
+                    <a href="{% url 'acceuil' %}" class="btn btn-primary mt-3">Retour à la boutique</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+

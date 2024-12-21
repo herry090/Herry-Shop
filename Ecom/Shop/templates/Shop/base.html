@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+<head>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>shop</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+<style>
+    /* styles.css */
+.loader {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.8); /* Couleur de fond avec transparence */
+    z-index: 9999; /* Assurez-vous que le loader est au-dessus de tout */
+    display: flex;
+    flex-direction: column; /* Aligne le texte et le spinner verticalement */
+    justify-content: center;
+    align-items: center;
+}
+
+.spinner {
+    border: 8px solid #f3f3f3; /* Couleur de fond */
+    border-top: 8px solid #3498db; /* Couleur de la barre */
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    animation: spin 1s linear infinite;
+}
+
+.loading-text {
+    margin-top: 15px; /* Espace entre le spinner et le texte */
+    font-size: 20px; /* Taille du texte */
+    color: #3498db; /* Couleur du texte */
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.hidden {
+    display: none; /* Classe pour masquer le contenu */
+}
+
+/* From Uiverse.io by satyamchaudharydev */ 
+/* === removing default button style ===*/
+.button {
+  padding: 5px 10px; /* Réduire le padding pour diminuer la taille */
+  font-size: 0.9em; /* Réduire la taille de la police */
+  position: relative; /* Nécessaire pour le positionnement de .hover-text */
+  color: black; /* Couleur noire par défaut */
+  background: black; /* Fond noir par défaut */
+  transition: background 0.3s; /* Transition pour l'animation */
+}
+
+/* button styling */
+.button {
+  --border-right: 6px;
+  --text-stroke-color: white;
+  --animation-color: black;
+  --fs-size: 2em;
+  letter-spacing: 1px;
+  text-decoration: none;
+  padding: 5px 10px;
+  font-size: 0.9em;
+  font-family: "Arial";
+  position: relative;
+  text-transform: uppercase;
+  color: transparent;
+  -webkit-text-stroke: 1px var(--text-stroke-color);
+}
+/* this is the text, when you hover on button */
+.hover-text {
+  position: absolute;
+  box-sizing: border-box;
+  content: attr(data-text);
+  color: var(--animation-color);
+  width: 0%;
+  inset: 0;
+  border-right: var(--border-right) solid var(--animation-color);
+  overflow: hidden;
+  transition: 0.5s;
+  -webkit-text-stroke: 1px var(--animation-color);
+}
+/* hover */
+.button:hover .hover-text {
+  width: 100%;
+  filter: drop-shadow(0 0 23px var(--animation-color))
+}
+.button:hover {
+  background: transparent; /* Fond transparent au survol */
+  color: transparent; /* Texte transparent au survol */
+}
+
+.user-info {
+    margin-left: 20px; /* Ajustez la valeur selon vos besoins */
+    display: flex;
+    align-items: center; /* Aligne verticalement le texte et l'image */
+}
+.user-info img {
+    margin-left: 10px; /* Espace entre le nom et l'image de profil */
+    width: 40px; /* Largeur de l'image de profil */
+    height: 40px; /* Hauteur de l'image de profil */
+    border-radius: 50%; /* Arrondir l'image de profil */
+}
+</style>
+</head>
+<body>
+    <div class="container"> 
+        <div class="row">
+            <div class="col-md-12">
+                <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                    <a class="navbar-brand" href="#">
+                        <img src="{% static 'images/Mo.png' %}" alt="Herry-shop Logo" style="height: 40px;">
+                    </a>
+                    <a class="navbar-brand" href="#">Herry-shop</a>
+                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+                      <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse" id="navbarNavDropdown">
+                      <ul class="navbar-nav">
+                        <li class="nav-item active">
+                          <a class="nav-link" href="{% url 'asur' %}">Acceuil <span class="sr-only">(current)</span></a>
+                        </li>
+                        <li class="nav-item">
+                          <a class="nav-link" href="{% url 'acceuil' %}">Produits</a>
+                        </li>
+                        <li class="nav-item">
+                          <button id="panier" type="button" class="btn btn-secondary" data-html="true" data-container="body" data-toggle="popover" data-placement="bottom" data-content="Vivamus
+                          sagittis lacus vel augue laoreet rutrum faucibus.">
+                            Panier(0)
+                          </button>
+                        </li>
+                        <li class="nav-item dropdown">
+                          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Settings
+                          </a>
+                          <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                            <a class="dropdown-item p-3 mb-2 bg-dark text-white" href="{% url 'contact' %}">Contact</a>
+                            <a class="dropdown-item p-3 mb-2 bg-info-subtle text-info-emphasis" href="{% url 'parametre' %}">Profil</a>
+                          </div>
+                        </li>
+                        {% if user.is_authenticated %}
+                        <div class="navbar-nav ml-auto">
+                            <a class="nav-link" href="#" onclick="confirmLogout(event)">Déconnexion</a> <!-- Bouton de déconnexion -->
+                            <div class="user-info">
+                                <span class="navbar-text">
+                                    User: {{ user.username }} <!-- Affiche le nom de l'utilisateur -->
+                                </span>
+                                {% if user.profile_image %}
+                                    <a href="{% url 'parametre' %}">
+                                        <img src="{{ user.profile_image.url }}" alt="Image de Profil">
+                                    </a>
+                                {% else %}
+                                   <a href="{% url 'parametre' %}">
+                                     <img src="{% static 'images2/images-3.png' %}" alt="Image de Profil">
+                                    </a> 
+                                {% endif %}
+                            </div>
+                        </div>
+                        {% else %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'connexion' %}">Connexion</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'inscription' %}">Inscription</a>
+                        </li>
+                        {% endif %}
+                      </ul>
+                    </div>
+                  </nav>
+            </div>
+        </div>
+        {% block content %}{% endblock %}
+    </div>
+    {% block footer %}
+<footer class="footer">
+    <div class="footer-container">
+        <div class="footer-section">
+            <h3>À propos</h3>
+            <p>Contactez-nous
+                N'hésitez pas à nous contacter pour toute demande d'assistance ou de renseignements. Merci de faire confiance à Herry-shop pour vos achats en ligne !</p>
+        </div>
+        <div class="footer-section">
+            <h3>Liens utiles</h3>
+            <ul>
+                <li><a href="{% url 'inscription' %}">Inscription</a></li>
+                <li><a href="{% url 'connexion' %}">Connexion</a></li>
+                <li><a href="#">Contact</a></li>
+                <li><a href="#">FAQ</a></li>
+            </ul>
+        </div>
+        <div class="footer-section">
+            <h3>Contact</h3>
+            <p>Email: Herrympoto1@gmail.com.com</p>
+            <p>Téléphone: +243903310467</p>
+        </div>
+        <div class="footer-section">
+            <h3>Suivez-nous</h3>
+            <div class="social-icons">
+                <a href="https://facebook.com"><i class="fab fa-facebook-f"></i></a>
+                <a href="https://twitter.com"><i class="fab fa-twitter"></i></a>
+                <a href="https://instagram.com"><i class="fab fa-instagram"></i></a>
+            </div>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        <p>&copy; {{ current_year }} Herry-Shop. Tous droits réservés.</p>
+    </div>
+</footer>
+<!-- Ajoutez le lien vers Font Awesome dans la section <head> de votre base.html -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+<style>
+    .footer {
+        background-color: #333;
+        color: white;
+        padding: 20px 0;
+    }
+    .footer-container {
+        display: flex;
+        justify-content: space-around;
+        flex-wrap: wrap;
+        max-width: 1200px;
+        margin: auto;
+    }
+    .footer-section {
+        flex: 1;
+        min-width: 200px;
+        margin: 10px;
+    }
+    .footer-section h3 {
+        margin-bottom: 10px;
+    }
+    .footer-section ul {
+        list-style: none;
+        padding: 0;
+    }
+    .footer-section ul li {
+        margin: 5px 0;
+    }
+    .footer-section a {
+        color: #fff;
+        text-decoration: none;
+    }
+    .footer-section a:hover {
+        text-decoration: underline;
+    }
+    .social-icons {
+        display: flex;
+        gap: 10px; /* Espace entre les icônes */
+    }
+    .social-icons a {
+        color: white;
+        font-size: 20px; /* Taille des icônes */
+    }
+    .footer-bottom {
+        text-align: center;
+        margin-top: 20px;
+        font-size: 14px;
+    }
+</style>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+    const loader = document.getElementById('loader');
+    const content = document.getElementById('content');
+
+    // Afficher le loader au début du chargement
+    loader.style.display = 'flex';
+
+    // Cacher le loader et afficher le contenu lorsque la page est complètement chargée
+    window.addEventListener('load', function() {
+        setTimeout(function() {
+            loader.style.display = 'none'; // Cacher le loader
+            content.classList.remove('hidden'); // Afficher le contenu
+        }, 2000); // 50 secondes
+    });
+});
+</script>
+<script>
+    function confirmLogout(event) {
+        event.preventDefault(); // Empêche le lien de se déclencher immédiatement
+        const confirmation = confirm("Êtes-vous sûr de vouloir vous déconnecter ?");
+        if (confirmation) {
+            window.location.href = "{% url 'deconnexion' %}"; // Redirige vers la page de déconnexion
+        }
+    }
+</script>
+{% endblock %}
+<div id="loader" class="loader">
+    <div class="spinner"></div>
+    <p class="loading-text">Herry-Shop loading ...</p> <!-- Texte de chargement -->
+</div>
+<div id="content" class="hidden"> <!-- Masquer le contenu par défaut -->
+</body>
+{% block js %}{% endblock %}
+</html>

@@ -1,0 +1,405 @@
+{% extends "Shop/base.html" %}
+{% block content %}
+{% load static %}
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Herry-Shop</title>
+    <link rel="stylesheet" href="#">
+    <style>
+        body {
+            font-family: 'Helvetica Neue', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4; /* Couleur de fond */
+        }
+        header {
+            background-image: url('{% static "images/jip.jpg" %}'); /* Utiliser une image de plus grande taille */
+            background-size: cover; /* S'assurer que l'image couvre tout l'en-tête */
+            height: 400px; /* Hauteur ajustée pour l'en-tête */
+            color: black;
+            padding: 60px 20px; /* Espacement interne */
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            font-size: 50%;
+        }
+        h1.title, h2, h4 {
+            color: #fff;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+        }
+        #home {
+            padding: 40px;
+            text-align: center;
+        }
+        .btn-reservation {
+            background-color: #28a745;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            text-decoration: none;
+        }
+        .find_trip input {
+            margin: 5px 0;
+            padding: 10px;
+            width: calc(100% - 22px); /* Ajustement de la largeur */
+        }
+        .content {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around; /* Espacement entre les boxes */
+        }
+        .box {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            margin: 10px;
+            overflow: hidden;
+            width: 280px; /* Largeur ajustée pour les boxes */
+            transition: transform 0.3s; /* Effet de transition */
+            text-align: left; /* Alignement à gauche pour le texte */
+        }
+        .box:hover {
+            transform: scale(1.05); /* Effet de zoom au survol */
+        }
+        .box img {
+            width: 100%; /* Image responsive */
+            height: 180px; /* Hauteur fixe pour les images */
+            object-fit: cover; /* Ajustement de l'image */
+        }
+        #a-propos {
+            display: flex; /* Flexbox pour aligner la vidéo et le texte */
+            align-items: center; /* Centrer verticalement */
+            padding: 40px; /* Espacement interne */
+        }
+        #a-propos .left, #a-propos .right {
+            flex: 1; /* Prendre une part égale de l'espace */
+            margin: 10px; /* Espacement entre les colonnes */
+        }
+        #contact {
+            background-color: #007BFF; /* Couleur de fond pour la section contact */
+            padding: 10px; /* Réduction de l'espacement interne */
+            color: white;
+            margin-bottom: 20px; /* Espacement avec le footer */
+        }
+        #contact input, #contact textarea {
+            width: calc(100% - 22px);
+            margin: 5px 0;
+            padding: 10px;
+        }
+
+        .jiu{
+            color: black;
+        }
+        button {
+            background-color: #28a745; /* Couleur du bouton d'envoi */
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .btn-lire-plus {
+        background-color: #28a745; /* Couleur du bouton */
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        text-decoration: none; /* Enlever le soulignement */
+        }
+
+        #contact {
+        margin-top: 20px;
+    }
+    .left-right {
+        display: flex;
+        justify-content: space-between;
+    }
+    .left,
+    .right {
+        flex: 1;
+    }
+    .right {
+        margin-left: 20px; /* Espacement entre les colonnes */
+    }
+    form {
+        display: flex;
+        flex-wrap: wrap;
+    }
+    label,
+    input,
+    textarea {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+    iframe {
+        width: 100%;
+        height: 150px;
+        border: 0;
+    }
+    .auto-typing{
+        color: #007BFF;
+    }
+</style>
+
+    </style>
+</head>
+<body>
+    <header>
+        <h1 class="title">Bienvenue |<span class='auto-typing'></span></h1>
+        <h3 class="title">Votre avenir numerique commence ici.</h3>
+        <h6 class="title">Naviguez, cliquez, acheter : Votre boutique high-tech, vous acompagne ...</h6>
+    </header>
+    <!-- A propos section -->
+    <section id="a-propos">
+        <div class="left">
+            <video src="{% static 'images2/vics.mp4'%}" autoplay loop muted style="width: 100%; height: auto;"></video> <!-- Ajout de muted pour la vidéo -->
+        </div>
+        <div class="right">
+            <h1 class="title">À propos de Herry-shop</h1>
+            <h6>Bienvenue chez Herry-shop, votre destination en ligne pour tous vos besoins en matière d’ordinateurs, d’appareils électroniques et d’accessoires. Notre mission est de vous fournir des produits de haute qualité, des prix compétitifs et un service client exceptionnel.</h6>
+            <h2 class="title">Notre histoire</h2>
+            <h6>Emplenté en fin novembre 2012 portant acquisition, confiance et statut du meilleur magasin tech online, Herry-shop est née de la passion pour la technologie et le désir de simplifier l’achat en ligne. Notre équipe dévouée travaille dur pour sélectionner les meilleurs produits et vous offrir une expérience de magasinage sans tracas.</h6>
+        </div>
+    </section>
+    <section id="a-propos">
+        <div class="left">
+            <video src="{% static 'images2/bings.mp4' %}" autoplay loop muted style="width: 100%; height: auto;"></video> <!-- Ajout de muted pour la vidéo -->
+        </div>
+        <div class="right">
+            <h1 class="title">Notre gamme de produits</h1>
+            <h6>Ordinateurs : Découvrez notre vaste sélection d’ordinateurs portables, de PC de bureau et d’accessoires. Que vous soyez un professionnel, un étudiant ou un amateur de jeux, nous avons ce qu’il vous faut.
+                Appareils électroniques : Des smartphones aux tablettes, en passant par les montres connectées et les écouteurs, explorez nos dernières innovations technologiques.
+                Accessoires : Protégez et améliorez vos appareils avec nos étuis, chargeurs, claviers, souris et bien plus encore.</h6>
+            <h2 class="title">Pourquoi choisir Herry-shop ?</h2>
+            <h6>Qualité garantie : Nous ne proposons que des produits de marques réputées, testés et approuvés.
+                Livraison rapide : Recevez vos achats directement à votre porte, rapidement et en toute sécurité.
+                Service clientèle exceptionnel : Notre équipe est là pour répondre à vos questions et résoudre tout problème.</h6>
+            <a href="{% url 'acceuil' %}" class="btn-lire-plus">Voir la boutique</a><!-- Transformé en bouton -->
+        </div>
+    </section>
+
+    <!-- Section témoignages -->
+    <section id="temoignages" style="margin: 40px 0; text-align: center;">
+        <h1 class="title" style="font-size: 2.5em; margin-bottom: 20px;"> Ce que les clients disent de nous </h1>
+        <div class="content" style="display: flex; justify-content: center; gap: 20px; flex-wrap: wrap;">
+            <div class="temoignage" style="flex: 1; max-width: 300px; padding: 20px; border: 1px solid #ddd; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); background-color: #f9f9f9;">
+                <img src="{% static 'images/R.jpeg' %}" alt="Logo 1" style="width: 100px; height: auto; margin-bottom: 10px;">
+                <p style="font-size: 1.2em; font-style: italic; color: #555;">"Un service exceptionnel! Je recommande vivement Herry-Shop a tous mes warriors."</p>
+                <p style="font-weight: bold; color: #333;">- Fally Ipupa | client satisfait </p>
+            </div>
+            <div class="temoignage" style="flex: 1; max-width: 300px; padding: 20px; border: 1px solid #ddd; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); background-color: #f9f9f9;">
+                <img src="{% static 'images/dena1.jpeg' %}" alt="Logo 2" style="width: 100px; height: auto; margin-bottom: 10px;">
+                <p style="font-size: 1.2em; font-style: italic; color: #555;">"Une expérience rassurante et produits de haute qualités, merci Herry-Shop!"</p>
+                <p style="font-weight: bold; color: #333;">- Dena Muana | cliente fidele </p>
+            </div>
+            <div class="temoignage" style="flex: 1; max-width: 300px; padding: 20px; border: 1px solid #ddd; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); background-color: #f9f9f9;">
+                <img src="{% static 'images/mbi1.jpeg' %}" alt="Logo 3" style="width: 100px; height: auto; margin-bottom: 10px;">
+                <p style="font-size: 1.2em; font-style: italic; color: #555;">"J'ai été livrer dans un temps reccords, Un service client impecable !"</p>
+                <p style="font-weight: bold; color: #333;">- Moise mbiye | client satisfait</p>
+            </div>
+        </div>
+    </section>
+    
+
+    <!-- section destination -->
+<section id="popular-destination">
+    <h1 class="title">Quelques produits de notre agence</h1>
+    <div class="content">
+        <!-- box -->
+        <div class="box">
+            <img src="{% static 'images/IMG_1770.jpg' %}" alt="">
+            <div class="content">
+                <div>
+                    <h4 class="jiu">Macbook Pro</h4>
+                    <p>_Des ordinateurs Macbook en gros et details .</p>
+                    <p>_Vos entreprises et services quotidien .</p>
+                    <p>_Pour plus details voir la boutique ...</p>
+                    <a href="{% url 'acceuil' %}" class="btn-lire-plus">Marketplace Shop</a> <!-- Transformé en bouton -->
+                </div>
+            </div>
+        </div>
+        <!-- box -->
+        <div class="box">
+            <img src="{% static 'images/IMG_1740.jpg' %}" alt="">
+            <div class="content">
+                <div>
+                    <h4 class="jiu">MACBOOK PRO i7 2018</h4>
+                    <p>_Disque ssd 256 giga</p>
+                    <p>_Processeurs 2.20ghz</p>
+                    <p>_Clavier lumineux</p>
+                    <a href="{% url 'acceuil' %}" class="btn-lire-plus">Marketplace Shop</a> <!-- Transformé en bouton -->
+                </div>
+            </div>
+        </div>
+        <!-- box -->
+        <div class="box">
+            <img src="{% static 'images/IMG_1781.PNG' %}" alt="">
+            <div class="content">
+                <div>
+                    <h4 class="jiu">Hp gaming x</h4>
+                    <p>_Perfomances superieurs a celles des ordinateurs standard</p>
+                    <p>_Processeur ultra puissant, une carte graphite de haute qualité pour tous les gamer</p>
+                    <a href="{% url 'acceuil' %}" class="btn-lire-plus">Marketplace Shop</a> <!-- Transformé en bouton -->
+                </div>
+            </div>
+        </div>
+        <!-- box -->
+        <div class="box">
+            <img src="{% static 'images/IMG_1778.PNG' %}" alt="">
+            <div class="content">
+                <div>
+                    <h4 class="jiu">Phantom windo</h4>
+                    <p>_Disque Ssd 1 tera i7-1360p</p>
+                    <p>_Ecran retina 15 pouce </p>
+                    <p>_13TH GENERATION 15.6 inch laptop</p>
+                    <a href="{% url 'acceuil' %}" class="btn-lire-plus">Marketplace Shop</a> <!-- Transformé en bouton -->
+                </div>
+            </div>
+        </div>
+        <!-- box -->
+        <div class="box">
+            <img src="{% static 'images/mac2.jpg' %}" alt="">
+            <div class="content">
+                <div>
+                    <h4 class="jiu">MACBOOK PRO i7 2017</h4>
+                    <p>_Ecran retina 15 pouce</p>
+                    <p>_Disque ssd 256 giga</p>
+                    <p>_Ram 16 giga</p>
+                    <a href="{% url 'acceuil' %}" class="btn-lire-plus">Marketplace Shop</a> <!-- Transformé en bouton -->
+                </div>
+            </div>
+        </div>
+        <!-- box -->
+        <div class="box">
+            <img src="{% static 'images/IMG_1738.jpg' %}" alt="">
+            <div class="content">
+                <div>
+                    <h4 class="jiu">HP ELITHBOOK i5 8TH GENERATION</h4>
+                    <p>_Disque ssd 256 giga</p>
+                    <p>_8Processeurs logiques 1.60, 1.80ghz</p>
+                    <p>_Port type C, carte sim, hdmi et autres</p>
+                    <a href="{% url 'acceuil' %}" class="btn-lire-plus">Marketplace Shop</a> <!-- Transformé en bouton -->
+                </div>
+            </div>
+        </div>
+        <!-- box -->
+    </div>
+</section>
+
+<!-- Localisation section -->
+<section id="localisation" style="margin-top: 20px; margin-bottom: 40px;">
+    <h1 class="title">Trouvez votre localisation</h1>
+    <form id="location-form" method="post" action="{% url 'asur' %}">
+        {% csrf_token %}
+        <div class="left-right">
+            <div class="left">
+                <label for="country">Pays</label>
+                <input type="text" id="country" name="country" required>
+                
+                <label for="city">Ville</label>
+                <input type="text" id="city" name="city" required>
+                
+                <label for="region">Région</label>
+                <textarea id="region" name="region" cols="30" rows="2"></textarea>
+            </div>
+            <div class="right">
+                <iframe id="map" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3978.547123456789!2d15.2948171!3d-4.3333545!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x1a6a3144ef1c4693%3A0x2c77c8a796cb17b5!2sUniversit%C3%A9%20Protestante%20au%20Congo!5e0!3m2!1sfr!2scd!4v1647531560805!5m2!1sfr!2scd" width="100%" height="300" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+
+            </div>
+        </div>
+        <button type="submit">Envoyer</button>
+    </form>
+</section>
+
+    
+    
+    <script>
+        var toggle_menu = document.querySelector('.responsive-menu');
+        var menu = document.querySelector('.menu');
+        toggle_menu.onclick= function(){
+             toggle_menu.classList.toggle('active');
+             menu.classList.toggle('responsive')
+        }
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12"></script>
+    <script>
+        let typed = new Typed('.auto-typing', {
+            strings: ['chez Herry-Shop !', 'Boyeyi malamu !', 'Kwiza mbote !', 'Are you ready?', 'Here we go !'],
+            typeSpeed: 100,
+            backSpeed: 100,
+            loop: true,
+            fadeOut: true,
+            fadeOutClass: 'typed-fade-out',
+            fadeOutDelay: 500
+
+        })
+    </script>
+
+    <script>
+        $(document).ready(function() {
+            $('#location-form').on('submit', function(e) {
+                e.preventDefault();
+
+                var formData = $(this).serialize();
+
+                $.ajax({
+                    url: $(this).attr('action'),
+                    type: 'POST',
+                    data: formData,
+                    success: function(response) {
+                        if (response.lat && response.lon) {
+                            var newSrc = `https://www.google.com/maps/embed/v1/view?key=YOUR_GOOGLE_MAPS_API_KEY&center=${response.lat},${response.lon}&zoom=15`;
+                            $('#map').attr('src', newSrc);
+                        } else {
+                            alert('Localisation introuvable');
+                        }
+                    },
+                    error: function() {
+                        alert('Erreur lors de la récupération des données de localisation');
+                    }
+                });
+            });
+        });
+    </script>
+    <script src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@0.2.28/bundled/lenis.js"></script>
+    <script>
+      (function() {
+        // Configuration de Lenis
+        const lenisConfig = {
+          duration: 1.2,
+          easing: t => Math.min(1, 1.001 - Math.pow(2, -10 * t)), // Fonction d'easing personnalisée
+          direction: 'vertical', // direction du défilement (verticale ou horizontale)
+          gestureDirection: 'vertical', // direction du geste (verticale, horizontale, ou les deux)
+          smooth: true, // activation du défilement fluide
+          mouseMultiplier: 1, // multiplicateur pour la souris
+          smoothTouch: false, // activation du défilement fluide sur les écrans tactiles
+          touchMultiplier: 2, // multiplicateur pour les écrans tactiles
+          infinite: false // défilement infini
+        };
+    
+        // Initialisation de Lenis
+        const lenis = new Lenis(lenisConfig);
+    
+        // Gestion des événements de défilement
+        lenis.on('scroll', ({ scroll, limit, velocity, direction, progress }) => {
+          console.log({ scroll, limit, velocity, direction, progress });
+        });
+    
+        // Fonction de mise à jour de Lenis avec animation frame
+        function update(time) {
+          lenis.raf(time);
+          requestAnimationFrame(update);
+        }
+    
+        // Démarrage de la boucle d'animation
+        requestAnimationFrame(update);
+      })();
+    </script>
+</body>
+{% endblock %}
+
+
+

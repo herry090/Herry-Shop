@@ -1,0 +1,197 @@
+{% extends "Shop/base.html" %}
+{% load static %}
+
+{% block content %}
+<!--Barre de recherche -->
+<div class="row mb-4">
+    <div class="col-md-12">
+        <form class="card card-sm" action="{% url 'recherche' %}" method="GET">
+            <div class="card-body row no-gutters align-items-center">
+                <div class="col">
+                    <input type="search" placeholder="Entrez le nom du produit que vous cherchez" name="item-name" class="form-control form-control-borderless">
+                </div>
+                <div class="col-auto">
+                    <button type="submit" class="btn btn-primary">Recherche</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<!-- Fin de barre de recherche -->
+
+<div class="container">
+    <div class="row">
+        {% for article in page_obj %}
+        <div class="col-12 col-md-6 col-lg-3 mb-4">
+            <div class="card h-100">
+                <img src="{{ article.image.url }}" class="card-img-top" alt="{{ article.title }}" style="height: 200px; object-fit: cover;"/>
+                <div class="card-body">
+                    <h5 id="aa{{article.title}}"><a href="#">{{ article.title }}</a></h5>
+                    <p id="price{{article.id}}">{{ article.price }}$</p>
+                    <p class="card-text">{{ article.desc|truncatewords:8 }}</p>
+                    <p class="card-text">Publié il y a {{ article.created_at|timesince }}</p>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <a href="{% url 'detail' article.id %}" class="btn btn-warning mb-2" title="Voir">
+                            <i class="fas fa-eye"></i>
+                        </a>
+                        <button class="btn btn-success ajouter-au-panier" data-toggle="tooltip" title="Ajouter" data-article-id="{{ article.id }}" data-article-title="{{ article.title }}" data-article-price="{{ article.price }}">
+                            <i class="fas fa-cart-plus"></i>
+                        </button>
+                        <button class="btn btn-danger supprimer-du-panier" data-toggle="tooltip" title="Supprimer" data-article-id="{{ article.id }}" data-article-title="{{ article.title }}" data-article-price="{{ article.price }}">
+                            <i class="fas fa-trash-alt"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+
+
+<!-- ... existing code ... -->
+
+<!-- Pagination -->
+<div class="row mt-3">
+    <div class="col-md-12 d-flex justify-content-center">
+        <ul class="pagination">
+            {% if page_obj.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}" aria-label="Précédent">
+                        <span aria-hidden="true"><i class="fas fa-chevron-left"></i> Précédent</span>
+                    </a>
+                </li>
+            {% endif %}
+
+            {% for num in page_obj.paginator.page_range %}
+                {% if page_obj.number == num %}
+                    <li class="page-item active">
+                        <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                    </li>
+                {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                    </li>
+                {% endif %}
+            {% endfor %}
+
+            {% if page_obj.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.next_page_number }}" aria-label="Suivant">
+                        <span aria-hidden="true">Suivant <i class="fas fa-chevron-right"></i></span>
+                    </a>
+                </li>
+            {% endif %}
+        </ul>
+    </div>
+</div>
+<script src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@0.2.28/bundled/lenis.js"></script>
+<script>
+  (function() {
+    // Configuration de Lenis
+    const lenisConfig = {
+      duration: 1.2,
+      easing: t => Math.min(1, 1.001 - Math.pow(2, -10 * t)), // Fonction d'easing personnalisée
+      direction: 'vertical', // direction du défilement (verticale ou horizontale)
+      gestureDirection: 'vertical', // direction du geste (verticale, horizontale, ou les deux)
+      smooth: true, // activation du défilement fluide
+      mouseMultiplier: 1, // multiplicateur pour la souris
+      smoothTouch: false, // activation du défilement fluide sur les écrans tactiles
+      touchMultiplier: 2, // multiplicateur pour les écrans tactiles
+      infinite: false // défilement infini
+    };
+
+    // Initialisation de Lenis
+    const lenis = new Lenis(lenisConfig);
+
+    // Gestion des événements de défilement
+    lenis.on('scroll', ({ scroll, limit, velocity, direction, progress }) => {
+      console.log({ scroll, limit, velocity, direction, progress });
+    });
+
+    // Fonction de mise à jour de Lenis avec animation frame
+    function update(time) {
+      lenis.raf(time);
+      requestAnimationFrame(update);
+    }
+
+    // Démarrage de la boucle d'animation
+    requestAnimationFrame(update);
+  })();
+</script>
+
+<!-- Fin de pagination -->
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript">
+    console.log('Juste pour tester ');
+    if(localStorage.getItem('panier') == null){
+        var panier = {};
+    }else{
+        panier = JSON.parse(localStorage.getItem('panier'));
+    }
+
+    $(document).on('click', '.ajouter-au-panier', function(){
+        console.log('ajouter');
+        var item_id = $(this).data('article-id').toString();
+        console.log(item_id);
+        if(panier[item_id] != undefined){
+            quantite = panier[item_id][0] + 1;
+            panier[item_id][0] = quantite;
+            panier[item_id][2] += parseFloat($(this).data('article-price'));
+        }else{
+            quantite = 1;
+            prix = parseFloat($(this).data('article-price'));
+            nom = $(this).data('article-title');
+            panier[item_id] = [quantite, nom, prix];
+        }
+        console.log(panier);
+        localStorage.setItem('panier', JSON.stringify(panier));
+        document.getElementById("panier").innerHTML = "Panier(" + Object.keys(panier).length + ")";
+        AfficherList(panier);
+    });
+
+    function AfficherList(panier) {
+        var panierString = " ";
+        var panierCount = Object.keys(panier).length;
+
+        if (panierCount === 0) {
+            panierString = "<p>Votre panier est vide. Veuillez ajouter un article pour passer à la caisse.</p>";
+        } else {
+            panierString += "<h5>Voici votre liste</h5>";
+            var index = 1;
+            for (var x in panier) {
+                panierString += index + ". ";
+                panierString += panier[x][1] + " Qte: " + panier[x][0] + "<br/>";
+                index += 1;
+            }
+            panierString += "<a href='/checkout' class='btn btn-primary'>Checkout</a>";
+        }
+
+        $('[data-toggle="popover"]').popover();
+        document.getElementById('panier').setAttribute('data-content', panierString);
+    }
+    AfficherList(panier);
+
+    $(document).ready(function(){
+    $('[data-toggle="tooltip"]').tooltip();
+    });
+
+    $(document).on('click', '.supprimer-du-panier', function(){
+        var item_id = $(this).data('article-id').toString();
+        if(panier[item_id] != undefined){
+            if(panier[item_id][0] > 1) {
+                panier[item_id][0] -= 1;
+                panier[item_id][2] -= parseFloat($(this).data('article-price'));
+            } else {
+                delete panier[item_id];
+            }
+            localStorage.setItem('panier', JSON.stringify(panier));
+            document.getElementById("panier").innerHTML = "Panier(" + Object.keys(panier).length + ")";
+            AfficherList(panier);
+        }
+    });
+</script>
+{% endblock %}
